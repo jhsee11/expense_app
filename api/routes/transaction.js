@@ -32,7 +32,9 @@ router.post('/', async (req, res) => {
 //GET ALL
 router.get('/', async (req, res) => {
   try {
-    const transactions = await Transaction.find();
+    const transactions = await Transaction.find().sort({
+      date: 1,
+    });
     res.status(200).json(transactions);
   } catch (err) {
     res.status(500).json(err);
