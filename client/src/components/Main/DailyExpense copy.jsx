@@ -5,24 +5,13 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 const DailyExpense = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
 
   useEffect(() => {
-    //let cancel = false;
-
     axios.get('http://localhost:5001/api/transaction').then((response) => {
-      //if (cancel) return;
-
-      console.log(`response is ${JSON.stringify(response.data)}`);
-      console.log(`type is ${typeof data}`);
+      console.log(`response is ${response.data}`);
       setData(response.data);
-
-      console.log(`data is ${JSON.stringify(data)}`);
     });
-
-    //   return () => {
-    //     cancel = true;
-    //   };
   }, []);
 
   return (
@@ -32,7 +21,7 @@ const DailyExpense = () => {
           <div class="p-4 max-w-md bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
             <div class="flex justify-between items-center mb-4">
               <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">
-                {val.date}
+                {val.Date}
               </h5>
               <a
                 href="#"
@@ -41,14 +30,14 @@ const DailyExpense = () => {
                 View all
               </a>
             </div>
-            {val.items.map((item, index) => {
+            {val.Item.map((item, index) => {
               return (
                 <Card
                   key={index}
-                  category={item.category}
-                  note={item.note}
-                  account={item.account}
-                  amount={item.amount}
+                  category={item.Category}
+                  note={item.Note}
+                  account={item.Account}
+                  amount={item.Amount}
                 />
               );
             })}

@@ -1,22 +1,42 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import axios from 'axios';
 
 const Modal = () => {
   const [showModal, setShowModal] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [val, setVal] = useState(0);
-
   const [openTab, setOpenTab] = React.useState(1);
+
+  const [transaction, setTransaction] = React.useState({
+    date: '',
+    items: { category: '', account: '', amount: '', note: '', description: '' },
+  });
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     setShowModal(false);
     //alert(`The name you entered was: `);
-    alert(`The name you entered was: `);
+
+    console.log(`Transaction is ${JSON.stringify(transaction)}`);
+
+    axios
+      .post(`http://localhost:5001/api/transaction/`, transaction)
+      .then((res) => {
+        console.log(res);
+        console.log(res.data);
+      });
   };
 
+  const handleChange = (e) => {
+    let newObj = { ...transaction };
+
+    newObj.items[e.target.name] = e.target.value;
+    console.log(newObj);
+    setTransaction(newObj);
+  };
   return (
     <>
       <button
@@ -100,35 +120,50 @@ const Modal = () => {
                     </label>
                     <DatePicker
                       className="text-center shadow appearance-none border rounded w-full py-2 px-1 mb-2 text-black"
-                      selected={startDate}
-                      onChange={(date) => setStartDate(date)}
+                      selected={transaction.date}
+                      name="date"
+                      onChange={(newDate) => {
+                        setTransaction({ ...transaction, date: newDate });
+                      }}
                     />
                     <label className="block text-black text-sm font-bold mb-1">
                       Category
                     </label>
-                    <input className="shadow appearance-none border rounded w-full py-2 px-1 mb-2 text-black" />
+                    <input
+                      className="shadow appearance-none border rounded w-full py-2 px-1 mb-2 text-black"
+                      name="category"
+                      value={transaction.items.category}
+                      onChange={handleChange}
+                    />
                     <label className="block text-black text-sm font-bold mb-1">
                       Account
                     </label>
-                    <input className="shadow appearance-none border rounded w-full py-2 px-1 mb-2 text-black" />
+                    <input
+                      className="shadow appearance-none border rounded w-full py-2 px-1 mb-2 text-black"
+                      name="account"
+                      value={transaction.items.account}
+                      onChange={handleChange}
+                    />
                     <label className="block text-black text-sm font-bold mb-1">
                       Amount
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       pattern="[0-9]*"
                       className="shadow number appearance-none border rounded w-full py-2 px-1 mb-2 text-black"
-                      value={val}
-                      onChange={(e) =>
-                        setVal((v) =>
-                          e.target.validity.valid ? e.target.value : v
-                        )
-                      }
+                      name="amount"
+                      value={transaction.items.amount}
+                      onChange={handleChange}
                     />
                     <label className="block text-black text-sm font-bold mb-1">
                       Note
                     </label>
-                    <input className="shadow apperance-none border rounded w-full py-2 px-1 mb-2 text-black" />
+                    <input
+                      className="shadow apperance-none border rounded w-full py-2 px-1 mb-2 text-black"
+                      name="note"
+                      value={transaction.items.note}
+                      onChange={handleChange}
+                    />
 
                     <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
                       <button
@@ -161,11 +196,11 @@ const Modal = () => {
                     </label>
                     <DatePicker
                       className="text-center shadow appearance-none border rounded w-full py-2 px-1 mb-2 text-black"
-                      selected={startDate}
-                      onChange={(date) => setStartDate(date)}
+                      selected={transaction.date}
+                      onChange={handleChange}
                     />
                     <label className="block text-black text-sm font-bold mb-1">
-                      Categoryz
+                      Category
                     </label>
                     <input className="shadow appearance-none border rounded w-full py-2 px-1 mb-2 text-black" />
                     <label className="block text-black text-sm font-bold mb-1">
@@ -180,11 +215,7 @@ const Modal = () => {
                       pattern="[0-9]*"
                       className="shadow number appearance-none border rounded w-full py-2 px-1 mb-2 text-black"
                       value={val}
-                      onChange={(e) =>
-                        setVal((v) =>
-                          e.target.validity.valid ? e.target.value : v
-                        )
-                      }
+                      onChange={handleChange}
                     />
                     <label className="block text-black text-sm font-bold mb-1">
                       Note
