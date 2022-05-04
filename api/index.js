@@ -6,7 +6,7 @@ const cors = require('cors');
 var bodyParser = require('body-parser');
 const transRoute = require('./routes/transaction');
 
-const port = 3000;
+const port = 5001;
 
 const corsOptions = {
   origin: ['http://localhost:3000', 'http://localhost:4000'],
