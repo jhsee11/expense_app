@@ -54,6 +54,23 @@ router.get('/find/:trans_id', async (req, res) => {
   }
 });
 
+//GET by date
+router.get('/find/date/:date', async (req, res) => {
+  try {
+    const targetDate = new Date(req.params.date);
+
+    console.log(
+      `Going to get the targeted transaction date with date : ${targetDate}`
+    );
+
+    const transactions = await Transaction.find({ date: targetDate });
+
+    res.status(200).json(transactions);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //GET specific transaction
 router.get('/find/specific/:id', async (req, res) => {
   try {
