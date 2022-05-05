@@ -71,6 +71,113 @@ router.get('/find/date/:date', async (req, res) => {
   }
 });
 
+// GROUP by date - api/transaction/group/date
+router.get('/group/date', async (req, res) => {
+  try {
+    const targetDate = new Date(req.params.date);
+
+    console.log(
+      `Going to get the targeted transaction date with date : ${targetDate}`
+    );
+
+    //$dateToString: { format: '%Y-%m', date: '$date' },
+    const transactions = await Transaction.aggregate([
+      { $unwind: '$items' },
+      {
+        $group: {
+          _id: {
+            category: '$items.category',
+            formattedDate: {
+              $dateToString: { format: '%Y-%m-%d', date: '$date' },
+            },
+          },
+          total: { $sum: '$items.amount' },
+        },
+      },
+      { $sort: { '_id.formattedDate': 1 } },
+    ]);
+
+    res.status(200).json(transactions);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+// GROUP by date - api/transaction/group/date
+router.get('/group/date/:targetDate', async (req, res) => {
+  try {
+    //const targetDate = new Date(req.params.date);
+
+    console.log(
+      `Going to get the targeted transaction date with date : ${req.params.targetDate}`
+    );
+
+    //$dateToString: { format: '%Y-%m', date: '$date' },
+    const transactions = await Transaction.aggregate([
+      { $unwind: '$items' },
+      {
+        $group: {
+          _id: {
+            category: '$items.category',
+            formattedDate: {
+              $dateToString: { format: '%Y-%m-%d', date: '$date' },
+            },
+          },
+          total: { $sum: '$items.amount' },
+        },
+      },
+      { $match: { '_id.formattedDate': req.params.targetDate } },
+      { $sort: { '_id.formattedDate': 1 } },
+    ]);
+
+    res.status(200).json(transactions);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+// GROUP by month - api/transaction/group/month
+router.get('/group/month', async (req, res) => {
+  try {
+    const targetDate = new Date(req.params.date);
+
+    console.log(
+      `Going to get the targeted transaction date with date : ${targetDate}`
+    );
+
+    //$dateToString: { format: '%Y-%m', date: '$date' },
+    const transactions = await Transaction.aggregate([
+      { $unwind: '$items' },
+      {
+        $group: {
+          _id: {
+            category: '$items.category',
+            formattedDate: {
+              $dateToString: { format: '%Y-%m', date: '$date' },
+            },
+          },
+          total: { $sum: '$items.amount' },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    //({
+    //  $group: {
+    //    _id: { $dateToString: { date: '$date', format: '%Y-%m' } },
+    //    total: { $sum: '$items.amount' },
+    //  },
+    //});
+
+    res.status(200).json(transactions);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 //GET specific transaction
 router.get('/find/specific/:id', async (req, res) => {
   try {
