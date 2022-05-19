@@ -1,6 +1,39 @@
 const router = require('express').Router();
 const Transaction = require('../models/Transaction');
 
+//DELETE
+router.delete('/:trans_id/:id', async (req, res) => {
+  console.log('delete route ah');
+  try {
+    //check if the data exists in the db
+    const exists = await Transaction.find({
+      items: { $elemMatch: { _id: req.params.id } },
+    });
+
+    console.log(`Exist length is ${exists.length}`);
+    console.log(`Exist object is ${JSON.stringify(exists)}`);
+
+    if (exists.length > 0) {
+      console.log(`Going to delete the transaction with id : ${req.params.id}`);
+      const updatedTrans = await Transaction.findOneAndUpdate(
+        { _id: req.params.trans_id },
+        {
+          $pull: {
+            items: { _id: req.params.id },
+          },
+          multi: true,
+        }
+      );
+      console.log(`${JSON.stringify(updatedTrans)}`);
+      res.status(200).json('Transaction has been deleted ...');
+    } else {
+      res.status(200).json('Targeted transaction is not found ...');
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //CREATE
 router.post('/', async (req, res) => {
   console.log('Going to create a new transaction...');
@@ -31,6 +64,7 @@ router.post('/', async (req, res) => {
 
 //GET ALL
 router.get('/', async (req, res) => {
+  console.log('Get All');
   try {
     const transactions = await Transaction.find().sort({
       date: 1,
@@ -64,6 +98,31 @@ router.get('/find/date/:date', async (req, res) => {
     );
 
     const transactions = await Transaction.find({ date: targetDate });
+
+    res.status(200).json(transactions);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//GET by Month
+router.get('/find/month/:monthYear', async (req, res) => {
+  try {
+    const year = req.params.monthYear.split('-')[1].toString();
+    const month = req.params.monthYear.split('-')[0].toString();
+
+    console.log(
+      `Going to get the targeted transaction month : ${month}, year : ${year}`
+    );
+
+    const transactions = await Transaction.find({
+      $expr: {
+        $and: [
+          { $eq: [{ $month: '$date' }, month] },
+          { $eq: [{ $year: '$date' }, year] },
+        ],
+      },
+    });
 
     res.status(200).json(transactions);
   } catch (err) {
@@ -139,7 +198,7 @@ router.get('/group/date/:targetDate', async (req, res) => {
 });
 
 // GROUP by month - api/transaction/group/month
-router.get('/group/month', async (req, res) => {
+router.get('/group/month/:monthYear', async (req, res) => {
   try {
     const targetDate = new Date(req.params.date);
 
@@ -161,7 +220,17 @@ router.get('/group/month', async (req, res) => {
           total: { $sum: '$items.amount' },
         },
       },
+      { $match: { '_id.formattedDate': req.params.monthYear } },
       { $sort: { _id: 1 } },
+      { $unwind: '$_id' },
+      {
+        $project: {
+          _id: 0,
+          category: '$_id.category',
+          formattedDate: '$_id.formattedDate',
+          total: 1,
+        },
+      },
     ]);
 
     //({
@@ -264,38 +333,6 @@ router.put('/:trans_id/:id', async (req, res) => {
     res.status(200).json('Transaction has been updated ...');
   } catch (err) {
     console.log(err);
-    res.status(500).json(err);
-  }
-});
-
-//DELETE
-router.delete('/:trans_id/:id', async (req, res) => {
-  try {
-    //check if the data exists in the db
-    const exists = await Transaction.find({
-      items: { $elemMatch: { _id: req.params.id } },
-    });
-
-    console.log(`Exist length is ${exists.length}`);
-    console.log(`Exist object is ${JSON.stringify(exists)}`);
-
-    if (exists.length > 0) {
-      console.log(`Going to delete the transaction with id : ${req.params.id}`);
-      const updatedTrans = await Transaction.findOneAndUpdate(
-        { _id: req.params.trans_id },
-        {
-          $pull: {
-            items: { _id: req.params.id },
-          },
-          multi: true,
-        }
-      );
-      console.log(`${JSON.stringify(updatedTrans)}`);
-      res.status(200).json('Transaction has been deleted ...');
-    } else {
-      res.status(200).json('Targeted transaction is not found ...');
-    }
-  } catch (err) {
     res.status(500).json(err);
   }
 });

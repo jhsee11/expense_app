@@ -2,25 +2,39 @@ import React from 'react';
 import Card from './Card';
 //import data from './TransactionApi';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { format } from 'date-fns';
 
-const DailyExpense = () => {
+const DailyExpense = ({ monthYear }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5001/api/transaction').then((response) => {
-      console.log(`response is ${JSON.stringify(response.data)}`);
-      console.log(`type is ${typeof data}`);
-      setData(response.data);
+    axios
+      .get('http://localhost:5001/api/transaction/find/month/' + monthYear)
+      .then((response) => {
+        console.log(`response is ${JSON.stringify(response.data)}`);
+        console.log(`type is ${typeof data}`);
+        setData(response.data);
 
-      console.log(`data is ${JSON.stringify(data)}`);
-    });
-  }, []);
+        console.log(`data is ${JSON.stringify(data)}`);
+      });
+  }, [monthYear]);
+
+  const callback = useCallback(() => {
+    axios
+      .get('http://localhost:5001/api/transaction/find/month/' + monthYear)
+      .then((response) => {
+        console.log(`response is ${JSON.stringify(response.data)}`);
+        console.log(`type is ${typeof data}`);
+        setData(response.data);
+
+        console.log(`data is ${JSON.stringify(data)}`);
+      });
+  }, [monthYear]);
 
   return (
     <div className="flex justify-center">
-      <div className="w-2/5 my-8 m-6 p-6">
+      <div className="w-4/5 mb-8 p-6">
         {data.map((val, index) => {
           return (
             <div
@@ -42,10 +56,13 @@ const DailyExpense = () => {
                 return (
                   <ul key={index}>
                     <Card
+                      parentCallback={callback}
                       category={item.category}
                       note={item.note}
                       account={item.account}
                       amount={item.amount}
+                      id={item._id}
+                      main_id={val._id}
                     />
                   </ul>
                 );
