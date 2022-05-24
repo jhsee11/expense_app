@@ -11,21 +11,13 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const Tabs = ({ color, monthYear }) => {
+const Tabs = ({ color, refresh, monthYear }) => {
   const [openTab, setOpenTab] = React.useState(1);
   const [data, setData] = useState([]);
 
-  // Sample data
-  // const data = [
-  //   { name: 'Food', value: 400 },
-  //   { name: 'Apparels', value: 300 },
-  //   { name: 'Transport', value: 300 },
-  //   { name: 'Others', value: 200 },
-  // ];
-
   useEffect(() => {
     axios
-      .get('http://localhost:5001/api/transaction/group/month/2022-06')
+      .get('http://localhost:5001/api/transaction/group/month/' + monthYear)
       .then((response) => {
         console.log(`response is ${JSON.stringify(response.data)}`);
         console.log(`type is ${typeof data}`);
@@ -124,9 +116,9 @@ const Tabs = ({ color, monthYear }) => {
             <div className="px-4 py-5 flex-auto">
               <div className="tab-content tab-space">
                 <div className={openTab === 1 ? 'block' : 'hidden'} id="link1">
-                  <DailyExpense monthYear={monthYear} />
+                  <DailyExpense key={refresh} monthYear={monthYear} />
                 </div>
-                <button>Test</button>
+                <button>{monthYear} apa la</button>
                 <div className={openTab === 2 ? 'block' : 'hidden'} id="link2">
                   <PieChart width={700} height={700}>
                     <Legend layout="vertical" verticalAlign="top" align="top" />

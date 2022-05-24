@@ -1,6 +1,19 @@
 const router = require('express').Router();
 const Transaction = require('../models/Transaction');
 
+//DELETE main id
+router.delete('/:id', async (req, res) => {
+  console.log('delete main entry ah');
+  try {
+    const deletedTrans = await Transaction.findOneAndDelete({
+      _id: req.params.id,
+    });
+    res.status(200).json(deletedTrans);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //DELETE
 router.delete('/:trans_id/:id', async (req, res) => {
   console.log('delete route ah');
@@ -10,10 +23,10 @@ router.delete('/:trans_id/:id', async (req, res) => {
       items: { $elemMatch: { _id: req.params.id } },
     });
 
-    console.log(`Exist length is ${exists.length}`);
+    console.log(`Exist length is ${exists[0].items.length}`);
     console.log(`Exist object is ${JSON.stringify(exists)}`);
 
-    if (exists.length > 0) {
+    if (exists.length > 0 && exists[0].items.length != 1) {
       console.log(`Going to delete the transaction with id : ${req.params.id}`);
       const updatedTrans = await Transaction.findOneAndUpdate(
         { _id: req.params.trans_id },
@@ -26,6 +39,12 @@ router.delete('/:trans_id/:id', async (req, res) => {
       );
       console.log(`${JSON.stringify(updatedTrans)}`);
       res.status(200).json('Transaction has been deleted ...');
+    } else if (exists[0].items.length == 1) {
+      console.log('In this route');
+      const updatedTrans = await Transaction.findOneAndDelete({
+        _id: req.params.trans_id,
+      });
+      res.status(200).json('Main transaction has been deleted ...');
     } else {
       res.status(200).json('Targeted transaction is not found ...');
     }
@@ -122,6 +141,8 @@ router.get('/find/month/:monthYear', async (req, res) => {
           { $eq: [{ $year: '$date' }, year] },
         ],
       },
+    }).sort({
+      date: 1,
     });
 
     res.status(200).json(transactions);
@@ -206,6 +227,9 @@ router.get('/group/month/:monthYear', async (req, res) => {
       `Going to get the targeted transaction date with date : ${targetDate}`
     );
 
+    console.log(
+      `Going to get the targeted transaction date with date : ${req.params.monthYear}`
+    );
     //$dateToString: { format: '%Y-%m', date: '$date' },
     const transactions = await Transaction.aggregate([
       { $unwind: '$items' },
@@ -214,7 +238,7 @@ router.get('/group/month/:monthYear', async (req, res) => {
           _id: {
             category: '$items.category',
             formattedDate: {
-              $dateToString: { format: '%Y-%m', date: '$date' },
+              $dateToString: { format: '%m-%Y', date: '$date' },
             },
           },
           total: { $sum: '$items.amount' },

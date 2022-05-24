@@ -1,6 +1,8 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
+import { TransContext } from '../../contexts/transContext';
+import EditModal from '../EditTransaction/EditTransaction';
 
 import {
   faCoffee,
@@ -48,7 +50,11 @@ const Card = (props) => {
               {props.amount}
             </div>
             <div className="relative right-0">
-              <FontAwesomeIcon className="m-1" icon={faPenToSquare} />
+              <EditModal
+                display_month={props.display_month}
+                main_id={main_id}
+                id={trans_id}
+              />
               <button onClick={handleClick}>
                 <FontAwesomeIcon className="m-1" icon={faTrashCan} />
               </button>

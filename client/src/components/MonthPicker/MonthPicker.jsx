@@ -36,6 +36,7 @@ const MonthPicker = ({ range, parentCallback }) => {
 
     let returnDate = (date.getMonth() + 1)
       .toString()
+      .padStart(2, 0)
       .concat('-', date.getFullYear());
 
     parentCallback(returnDate);

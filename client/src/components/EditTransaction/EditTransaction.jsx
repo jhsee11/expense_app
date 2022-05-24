@@ -1,12 +1,21 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useContext } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { Listbox, Transition } from '@headlessui/react';
-
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCoffee,
+  faTrashCan,
+  faPenToSquare,
+} from '@fortawesome/free-solid-svg-icons';
+import { TransContext } from '../../contexts/transContext';
+import { getTransactions } from '../../contexts/apiCalls';
 
-const Modal = ({ parentCallback }) => {
+const EditModal = ({ display_month, main_id, id }) => {
+  const { transactions, dispatch } = useContext(TransContext);
+
   const categories = [
     { name: 'Food' },
     { name: 'Social Life' },
@@ -46,15 +55,18 @@ const Modal = ({ parentCallback }) => {
     //alert(`The name you entered was: `);
     console.log(`Transaction is ${JSON.stringify(transaction)}`);
 
-    // submit the POST request to create a new transaction
+    // submit the PUT request to edit a new transaction
     axios
-      .post(`http://localhost:5001/api/transaction/`, transaction)
+      .put(
+        'http://localhost:5001/api/transaction/' + main_id + '/' + id,
+        transaction
+      )
       .then((res) => {
         console.log(res);
         console.log(res.data);
 
-        // trigger the parent function to trigger re-render
-        parentCallback();
+        //after update transactions will need to retrieve it again
+        getTransactions(display_month, dispatch);
       });
   };
 
@@ -82,13 +94,8 @@ const Modal = ({ parentCallback }) => {
 
   return (
     <>
-      <button
-        className="bg-blue-200 text-black active:bg-blue-500 
-      font-bold px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-8"
-        type="button"
-        onClick={() => setShowModal(true)}
-      >
-        Add Transaction
+      <button className="" type="button" onClick={() => setShowModal(true)}>
+        <FontAwesomeIcon className="m-1" icon={faPenToSquare} />
       </button>
       {showModal ? (
         <>
@@ -410,4 +417,4 @@ const Modal = ({ parentCallback }) => {
   );
 };
 
-export default Modal;
+export default EditModal;
