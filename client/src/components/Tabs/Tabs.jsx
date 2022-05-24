@@ -20,10 +20,7 @@ const Tabs = ({ color, refresh, monthYear }) => {
       .get('http://localhost:5001/api/transaction/group/month/' + monthYear)
       .then((response) => {
         console.log(`response is ${JSON.stringify(response.data)}`);
-        console.log(`type is ${typeof data}`);
         setData(response.data);
-
-        console.log(`data is ${JSON.stringify(data)}`);
       });
   }, [monthYear]);
 
@@ -32,10 +29,10 @@ const Tabs = ({ color, refresh, monthYear }) => {
     '#00C49F',
     '#FFBB28',
     '#FF8042',
-    '#0088FE',
-    '#00C49F',
-    '#FFBB28',
-    '#FF8042',
+    'ffe699',
+    '#e6ff99',
+    '#99ffff',
+    '#cc99ff',
   ];
   const RADIAN = Math.PI / 180;
 
@@ -118,9 +115,8 @@ const Tabs = ({ color, refresh, monthYear }) => {
                 <div className={openTab === 1 ? 'block' : 'hidden'} id="link1">
                   <DailyExpense key={refresh} monthYear={monthYear} />
                 </div>
-                <button>{monthYear} apa la</button>
                 <div className={openTab === 2 ? 'block' : 'hidden'} id="link2">
-                  <PieChart width={700} height={700}>
+                  <PieChart className="mx-14" width={700} height={700}>
                     <Legend layout="vertical" verticalAlign="top" align="top" />
                     <Pie
                       data={data}
@@ -141,6 +137,18 @@ const Tabs = ({ color, refresh, monthYear }) => {
                       ))}
                     </Pie>
                   </PieChart>
+                  <table className="table-auto border m-auto mb-10">
+                    <tr>
+                      <th className="border p-4">Category</th>
+                      <th className="border p-4">Category Expense</th>
+                    </tr>
+                    {data.map((entry, index) => (
+                      <tr>
+                        <td className="border py-2 px-4">{entry.category}</td>
+                        <td className="border py-2 px-4">{entry.total}</td>
+                      </tr>
+                    ))}
+                  </table>
                 </div>
               </div>
             </div>

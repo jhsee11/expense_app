@@ -38,17 +38,10 @@ const Main = () => {
     setMonthYear(date);
   }, []);
 
-  {
-    /*}
-  const callback2 = useCallback(() => {
-    setRefresh(Math.floor(Math.random() * 1000000000));
-  }, []);
-  */
-  }
   return (
     <div>
       <MonthPicker parentCallback={callback} range={range} />
-      <div>date is {monthYear}</div>
+      {/*<div>date is {monthYear}</div>*/}
       <Tabs refresh={update} monthYear={monthYear} />
       <NewTransaction parentCallback={forceUpdate} />
     </div>

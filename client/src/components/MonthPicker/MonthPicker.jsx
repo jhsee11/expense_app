@@ -52,9 +52,11 @@ const MonthPicker = ({ range, parentCallback }) => {
         showMonthYearPicker
         onChange={handleOnChange}
       />
+      {/*
       <div className="my-4">
         Month : {monthNames[startDate.getMonth()]} {startDate.getFullYear()}
       </div>
+      */}
     </div>
   );
 };
