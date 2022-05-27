@@ -116,7 +116,7 @@ const Tabs = ({ color, refresh, monthYear }) => {
                   <DailyExpense key={refresh} monthYear={monthYear} />
                 </div>
                 <div className={openTab === 2 ? 'block' : 'hidden'} id="link2">
-                  <PieChart className="mx-14" width={700} height={700}>
+                  <PieChart className="m-auto" width={600} height={600}>
                     <Legend layout="vertical" verticalAlign="top" align="top" />
                     <Pie
                       data={data}
@@ -137,6 +137,7 @@ const Tabs = ({ color, refresh, monthYear }) => {
                       ))}
                     </Pie>
                   </PieChart>
+
                   <table className="table-auto border m-auto mb-10">
                     <tr>
                       <th className="border p-4">Category</th>

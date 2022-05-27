@@ -325,14 +325,28 @@ router.put('/:trans_id/:id', async (req, res) => {
     } else {
       // need to delete and recreate to tie with new date object
       console.log('gg');
+
       const updatedTrans = await Transaction.findOneAndUpdate(
         { _id: req.params.trans_id },
         {
           $pull: {
             items: { _id: req.params.id },
           },
+        },
+        {
+          new: true,
         }
       );
+
+      console.log(`Updated Trans is ${updatedTrans}`);
+
+      // need to check if the date object length is 0
+      if (updatedTrans.items.length == 0) {
+        console.log('In this route, items length is 0');
+        const updatedTrans = await Transaction.findOneAndDelete({
+          _id: req.params.trans_id,
+        });
+      }
 
       // create a new one if the date object not exists
       try {
