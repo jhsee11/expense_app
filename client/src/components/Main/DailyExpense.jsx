@@ -48,13 +48,13 @@ const DailyExpense = ({ monthYear }) => {
   }, []);
 
   return (
-    <div className="flex justify-center">
-      <div className="w-4/5 mb-8 p-6">
+    <div className="relative flex justify-center">
+      <div className="w-[90%] mb-8 p-6">
         {data.map((val, index) => {
           return (
             <div
               key={index}
-              className="p-4 matailwx-w-md bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700"
+              className="overflow-x-hidden p-4 bg-slate-100 rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700"
             >
               <div className="flex justify-between items-center mb-4">
                 <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
@@ -69,22 +69,24 @@ const DailyExpense = ({ monthYear }) => {
                   </a>
                 </button>
               </div>
-              {val.items.map((item, index) => {
-                return (
-                  <ul key={index}>
-                    <Card
-                      parentCallback={callback}
-                      category={item.category}
-                      note={item.note}
-                      account={item.account}
-                      amount={item.amount}
-                      id={item._id}
-                      main_id={val._id}
-                      display_month={monthYear}
-                    />
-                  </ul>
-                );
-              })}
+              <div className="">
+                {val.items.map((item, index) => {
+                  return (
+                    <ul key={index}>
+                      <Card
+                        parentCallback={callback}
+                        category={item.category}
+                        note={item.note}
+                        account={item.account}
+                        amount={item.amount}
+                        id={item._id}
+                        main_id={val._id}
+                        display_month={monthYear}
+                      />
+                    </ul>
+                  );
+                })}
+              </div>
             </div>
           );
         })}

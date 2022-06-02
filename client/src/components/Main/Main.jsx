@@ -40,7 +40,7 @@ const Main = () => {
 
   return (
     <div>
-      <h1 className="font-bold text-3xl text-rose-800 font-serif mt-8">
+      <h1 className="font-bold text-3xl text-rose-800 font-serif mt-8 ">
         Expense Tracker
       </h1>
       <MonthPicker parentCallback={callback} range={range} />

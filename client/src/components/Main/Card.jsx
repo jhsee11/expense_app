@@ -31,34 +31,37 @@ const Card = (props) => {
   };
 
   return (
-    <div className="flow-root">
-      <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
-        <li className="p-4 border">
-          <div className="flex justify-between items-center space-x-4">
-            <div className="w-24">
+    <div className="relative">
+      <ul
+        role="list"
+        className="divide-y divide-gray-200 dark:divide-gray-700 overflow-x-hidden"
+      >
+        <li className="flex p-4 border-2 border-blue-100 ">
+          <div className="z-5 flex justify-around space-x-4">
+            <div className="w-30 block">
               <p>{props.category}</p>
             </div>
-            <div className="">
-              <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+            <div className="w-30">
+              <p className="text-sm font-medium text-gray-900  dark:text-white">
                 {props.note}
               </p>
-              <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+              <p className="text-sm text-gray-500  dark:text-gray-400">
                 {props.account}
               </p>
             </div>
-            <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+            <div className="w-30 items-center text-base font-semibold text-gray-900 dark:text-white">
               {props.amount}
             </div>
-            <div className="relative right-0">
-              <EditModal
-                display_month={props.display_month}
-                main_id={main_id}
-                id={trans_id}
-              />
-              <button onClick={handleClick}>
-                <FontAwesomeIcon className="m-1" icon={faTrashCan} />
-              </button>
-            </div>
+          </div>
+          <div className="hidden cutoff:block absolute right-2 flex justify-end">
+            <EditModal
+              display_month={props.display_month}
+              main_id={main_id}
+              id={trans_id}
+            />
+            <button onClick={handleClick}>
+              <FontAwesomeIcon className="m-1" icon={faTrashCan} />
+            </button>
           </div>
         </li>
       </ul>
