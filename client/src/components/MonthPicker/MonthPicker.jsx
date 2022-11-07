@@ -31,6 +31,7 @@ const MonthPicker = ({ range, parentCallback }) => {
   const handleOnChange = (date) => {
     const month = date.getMonth();
     const year = date.getFullYear();
+    console.log(`date is ${date}`);
     setMonthYear({ month: month, year: year });
     setStartDate(date);
 
@@ -46,17 +47,12 @@ const MonthPicker = ({ range, parentCallback }) => {
     <div className="MonthYearPicker w-80 mx-auto mt-10">
       Select Month
       <DatePicker
-        className="text-center flex justify-content shadow border rounded w-full py-2 px-1 mb-2 text-black"
+        className="text-center mt-1 flex shadow border rounded w-full py-2 px-1 mb-2 text-black"
         selected={startDate}
         dateFormat="MM/yyyy"
-        showMonthYearPicker
         onChange={handleOnChange}
+        showMonthYearPicker
       />
-      {/*
-      <div className="my-4">
-        Month : {monthNames[startDate.getMonth()]} {startDate.getFullYear()}
-      </div>
-      */}
     </div>
   );
 };

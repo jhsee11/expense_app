@@ -3,8 +3,14 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { Listbox, Transition } from '@headlessui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 
-import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
+import {
+  CheckIcon,
+  SelectorIcon,
+  AiFillCloseCircle,
+} from '@heroicons/react/solid';
 
 const Modal = ({ parentCallback }) => {
   const categories = [
@@ -92,20 +98,20 @@ const Modal = ({ parentCallback }) => {
       </button>
       {showModal ? (
         <>
-          <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 focus:outline-none">
+          <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 focus:outline-none mb-16">
             <div className="relative h-[40%] w-auto my-6 mx-auto max-w-3xl">
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white">
                 <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
                   <ul
-                    className="flex mx-auto mb-0 list-none flex-wrap pt-3 pb-4 flex-row"
+                    className="flex mx-auto w-[70%] mb-0 list-none flex-wrap pt-3 pb-4 flex-row"
                     role="tablist"
                   >
-                    <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+                    <li className="ml-4 mr-2 last:mr-0 flex-auto text-center">
                       <a
                         className={
-                          'text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal ' +
+                          'text-sm font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal ' +
                           (openTab === 1
-                            ? 'text-white bg-blue-600'
+                            ? 'bg-red-300'
                             : 'text-pink-600 bg-white')
                         }
                         onClick={(e) => {
@@ -119,6 +125,7 @@ const Modal = ({ parentCallback }) => {
                         Expense
                       </a>
                     </li>
+                    {/*}
                     <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
                       <a
                         className={
@@ -137,16 +144,17 @@ const Modal = ({ parentCallback }) => {
                       >
                         Income
                       </a>
-                    </li>
+                    </li>*/}
                   </ul>
 
                   <button
                     className="bg-transparent border-0 text-black float-right"
                     onClick={() => setShowModal(false)}
                   >
-                    <span className="text-black opacity-80 h-7 w-7 text-xl block bg-gray-400 rounded-full">
-                      x
-                    </span>
+                    <FontAwesomeIcon
+                      className="text-3xl"
+                      icon={faCircleXmark}
+                    />
                   </button>
                 </div>
                 <div
@@ -329,14 +337,14 @@ const Modal = ({ parentCallback }) => {
 
                     <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
                       <button
-                        className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+                        className="hover:text-white hover:bg-pink-600 bg-blue-100 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
                         type="button"
                         onClick={() => setShowModal(false)}
                       >
                         Close
                       </button>
                       <button
-                        className="text-white bg-yellow-500 active:bg-yellow-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                        className="hover:text-white hover:bg-pink-600  bg-blue-100 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
                         type="submit"
                       >
                         Submit

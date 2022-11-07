@@ -26,6 +26,7 @@ const Main = () => {
   );
 
   const [update, setUpdate] = useState();
+
   const forceUpdate = useCallback(() => {
     console.log('LAI LIAO LAI LIAO');
     console.log('LAI LIAO monthYear is ' + monthYear);
@@ -35,12 +36,13 @@ const Main = () => {
   });
 
   const callback = useCallback((date) => {
+    console.log(`z date is ${date}`);
     setMonthYear(date);
   }, []);
 
   return (
     <div>
-      <h1 className="font-bold text-3xl text-rose-800 font-serif mt-8 ">
+      <h1 className="font-bold text-4xl text-rose-800 font-serif mt-8 ">
         Expense Tracker
       </h1>
       <MonthPicker parentCallback={callback} range={range} />

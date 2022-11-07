@@ -14,7 +14,7 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-//DELETE
+//DELETE target transaction
 router.delete('/:trans_id/:id', async (req, res) => {
   console.log('delete route ah');
   try {
@@ -53,13 +53,14 @@ router.delete('/:trans_id/:id', async (req, res) => {
   }
 });
 
-//CREATE
+//CREATE a new transaction
 router.post('/', async (req, res) => {
   console.log('Going to create a new transaction...');
   console.log(req.body);
 
   try {
     let savedTransaction = null;
+    console.log(`date is ${req.body.date}`);
     const transExists = await Transaction.exists({ date: req.body.date });
     if (transExists) {
       savedTransaction = await Transaction.findOneAndUpdate(
@@ -81,9 +82,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-//GET ALL
+//GET ALL transactions
 router.get('/', async (req, res) => {
-  console.log('Get All');
   try {
     const transactions = await Transaction.find().sort({
       date: 1,
@@ -127,13 +127,32 @@ router.get('/find/date/:date', async (req, res) => {
 //GET by Month
 router.get('/find/month/:monthYear', async (req, res) => {
   try {
-    const year = req.params.monthYear.split('-')[1].toString();
-    const month = req.params.monthYear.split('-')[0].toString();
+    const year = req.params.monthYear.split('-')[1];
+    const month = req.params.monthYear.split('-')[0];
+
+    let startDate = new Date(year, month - 1);
+    console.log(`start date is ${startDate}`);
+
+    let endDate = new Date(year, month);
+    console.log(`end date is ${endDate}`);
 
     console.log(
       `Going to get the targeted transaction month : ${month}, year : ${year}`
     );
 
+    const transactions = await Transaction.find({
+      $expr: {
+        $and: [
+          { $gte: [{ $toDate: '$date' }, startDate] },
+          { $lt: [{ $toDate: '$date' }, endDate] },
+        ],
+      },
+    }).sort({
+      date: 1,
+    });
+
+    {
+      /*}
     const transactions = await Transaction.find({
       $expr: {
         $and: [
@@ -144,6 +163,8 @@ router.get('/find/month/:monthYear', async (req, res) => {
     }).sort({
       date: 1,
     });
+  */
+    }
 
     res.status(200).json(transactions);
   } catch (err) {

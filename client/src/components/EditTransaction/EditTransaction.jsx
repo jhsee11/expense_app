@@ -5,10 +5,12 @@ import axios from 'axios';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import {
   faCoffee,
   faTrashCan,
   faPenToSquare,
+  faCircleXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { TransContext } from '../../contexts/transContext';
 import { getTransactions } from '../../contexts/apiCalls';
@@ -104,15 +106,15 @@ const EditModal = ({ display_month, main_id, id }) => {
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white">
                 <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
                   <ul
-                    className="flex mx-auto mb-0 list-none flex-wrap pt-3 pb-4 flex-row"
+                    className="flex w-[70%] mx-auto mb-0 list-none flex-wrap pt-3 pb-4 flex-row"
                     role="tablist"
                   >
-                    <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+                    <li className="ml-4 mr-2 last:mr-0 flex-auto text-center">
                       <a
                         className={
                           'text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal ' +
                           (openTab === 1
-                            ? 'text-white bg-blue-600'
+                            ? 'bg-red-300'
                             : 'text-pink-600 bg-white')
                         }
                         onClick={(e) => {
@@ -126,34 +128,16 @@ const EditModal = ({ display_month, main_id, id }) => {
                         Expense
                       </a>
                     </li>
-                    <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
-                      <a
-                        className={
-                          'text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal ' +
-                          (openTab === 2
-                            ? 'text-white bg-blue-600'
-                            : 'text-pink-600 bg-white')
-                        }
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setOpenTab(2);
-                        }}
-                        data-toggle="tab"
-                        href="#link2"
-                        role="tablist"
-                      >
-                        Income
-                      </a>
-                    </li>
                   </ul>
 
                   <button
                     className="bg-transparent border-0 text-black float-right"
                     onClick={() => setShowModal(false)}
                   >
-                    <span className="text-black opacity-80 h-7 w-7 text-xl block bg-gray-400 rounded-full">
-                      x
-                    </span>
+                    <FontAwesomeIcon
+                      className="text-3xl"
+                      icon={faCircleXmark}
+                    />
                   </button>
                 </div>
                 <div
@@ -333,17 +317,16 @@ const EditModal = ({ display_month, main_id, id }) => {
                       value={transaction.items.note}
                       onChange={handleChange}
                     />
-
                     <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
                       <button
-                        className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+                        className="hover:text-white hover:bg-pink-600 bg-blue-100 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
                         type="button"
                         onClick={() => setShowModal(false)}
                       >
                         Close
                       </button>
                       <button
-                        className="text-white bg-yellow-500 active:bg-yellow-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                        className="hover:text-white hover:bg-pink-600  bg-blue-100 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
                         type="submit"
                       >
                         Submit

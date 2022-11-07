@@ -1,28 +1,64 @@
 import React from 'react';
 import DailyExpense from '../Main/DailyExpense';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
-import {
-  PieChart,
-  Pie,
-  Legend,
-  Sector,
-  Cell,
-  ResponsiveContainer,
-} from 'recharts';
+import { useState, useEffect, useContext } from 'react';
+import PieChart from '../PieChart';
+import { TransContext } from '../../contexts/transContext';
 
 const Tabs = ({ color, refresh, monthYear }) => {
   const [openTab, setOpenTab] = React.useState(1);
   const [data, setData] = useState([]);
+  const [targetData, setTargetData] = useState({
+    labels: '',
+    datasets: [
+      {
+        label: 'Stocks Price',
+        data: '',
+        borderColor: 'black',
+        borderWidth: 1,
+      },
+    ],
+  });
 
-  useEffect(() => {
+  const { transactions } = useContext(TransContext);
+
+  const getTransaction = () => {
     axios
       .get('http://localhost:5001/api/transaction/group/month/' + monthYear)
       .then((response) => {
-        console.log(`response is ${JSON.stringify(response.data)}`);
+        console.log(`response is haha ${JSON.stringify(response.data)}`);
         setData(response.data);
+
+        setTargetData({
+          // need to fetch the data from mongo db
+          labels: response.data.map(
+            (item) =>
+              //new Date(stock.index).toLocaleDateString()
+              item.category
+          ),
+          datasets: [
+            {
+              label: 'Stocks Price',
+              data: response.data.map((item) => item.total),
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+              ],
+              borderColor: 'black',
+              borderWidth: 2,
+            },
+          ],
+        });
       });
-  }, [monthYear]);
+  };
+
+  useEffect(() => {
+    getTransaction();
+  }, [monthYear, transactions]);
 
   const COLORS = [
     '#0088FE',
@@ -116,40 +152,61 @@ const Tabs = ({ color, refresh, monthYear }) => {
                   <DailyExpense key={refresh} monthYear={monthYear} />
                 </div>
                 <div className={openTab === 2 ? 'block' : 'hidden'} id="link2">
-                  <PieChart className="m-auto" width={600} height={600}>
-                    <Legend layout="vertical" verticalAlign="top" align="top" />
-                    <Pie
-                      data={data}
-                      cx="45%"
-                      cy="50%"
-                      labelLine={false}
-                      label={renderCustomizedLabel}
-                      nameKey="category"
-                      dataKey="total"
-                      outerRadius={210}
-                      fill="#8884d8"
-                    >
-                      {data.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
+                  {data.length > 0 && (
+                    <div className="mt-6 w-[50%] mx-auto">
+                      <PieChart chartData={targetData} />
+                      {/*
+                      <PieChart className="m-auto" width={600} height={600}>
+                        <Legend
+                          layout="vertical"
+                          verticalAlign="top"
+                          align="top"
                         />
-                      ))}
-                    </Pie>
-                  </PieChart>
+                        <Pie
+                          data={data}
+                          cx="45%"
+                          cy="50%"
+                          labelLine={false}
+                          label={renderCustomizedLabel}
+                          nameKey="category"
+                          dataKey="total"
+                          outerRadius={210}
+                          fill="#8884d8"
+                        >
+                          {data.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={COLORS[index % COLORS.length]}
+                            />
+                          ))}
+                        </Pie>
+                      </PieChart> */}
+                      <div className="mt-10">
+                        <table className="table-auto border m-auto mb-10">
+                          <tr>
+                            <th className="border p-4">Category</th>
+                            <th className="border p-4">Category Expense</th>
+                          </tr>
+                          {data.map((entry, index) => (
+                            <tr>
+                              <td className="border py-2 px-4">
+                                {entry.category}
+                              </td>
+                              <td className="border py-2 px-4">
+                                {entry.total}
+                              </td>
+                            </tr>
+                          ))}
+                        </table>
+                      </div>
+                    </div>
+                  )}
 
-                  <table className="table-auto border m-auto mb-10">
-                    <tr>
-                      <th className="border p-4">Category</th>
-                      <th className="border p-4">Category Expense</th>
-                    </tr>
-                    {data.map((entry, index) => (
-                      <tr>
-                        <td className="border py-2 px-4">{entry.category}</td>
-                        <td className="border py-2 px-4">{entry.total}</td>
-                      </tr>
-                    ))}
-                  </table>
+                  {!data.length > 0 && (
+                    <>
+                      <p className="font-bold">No transaction this month</p>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

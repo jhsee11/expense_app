@@ -32,28 +32,27 @@ const Card = (props) => {
 
   return (
     <div className="relative">
-      <ul
-        role="list"
-        className="divide-y divide-gray-200 dark:divide-gray-700 overflow-x-hidden"
-      >
-        <li className="flex p-4 border-2 border-blue-100 ">
-          <div className="z-5 flex justify-around space-x-4">
-            <div className="w-30 block">
+      <ul role="list" className="divide-y divide-gray-200 px-2">
+        <li className="flex p-4 border-2 rounded border-blue-200 overflow-auto">
+          <div className="z-5 flex space-x-4">
+            <div className="w-40">
               <p>{props.category}</p>
             </div>
-            <div className="w-30">
-              <p className="text-sm font-medium text-gray-900  dark:text-white">
+            <div className="w-28 ml-20">
+              <p className="text-sm justify-end font-medium text-gray-900">
                 {props.note}
               </p>
+            </div>
+            <div className="ml-10 w-24">
               <p className="text-sm text-gray-500  dark:text-gray-400">
                 {props.account}
               </p>
             </div>
-            <div className="w-30 items-center text-base font-semibold text-gray-900 dark:text-white">
+            <div className="w-24 ml-12 items-center text-base font-semibold text-gray-900">
               {props.amount}
             </div>
           </div>
-          <div className="hidden cutoff:block absolute right-2 flex justify-end">
+          <div className="relative desktopBig:absolute desktopBig:right-4 flex pr-2 ">
             <EditModal
               display_month={props.display_month}
               main_id={main_id}
