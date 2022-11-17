@@ -145,7 +145,7 @@ const Tabs = ({ color, refresh, monthYear }) => {
               </a>
             </li>
           </ul>
-          <div className="border-solid border-2 border-pink-600 relative flex flex-col min-w-0 break-words bg-blue w-full mb-6 shadow-lg rounded">
+          <div className="border-solid border-2 border-pink-600 relative flex flex-col min-w-0 break-words bg-blue w-full mb-6 shadow-lg px-10 rounded">
             <div className="px-4 py-5 flex-auto">
               <div className="tab-content tab-space">
                 <div className={openTab === 1 ? 'block' : 'hidden'} id="link1">
@@ -181,11 +181,11 @@ const Tabs = ({ color, refresh, monthYear }) => {
                           ))}
                         </Pie>
                       </PieChart> */}
-                      <div className="mt-10">
-                        <table className="table-auto border m-auto mb-10">
+                      <div className="overflow-auto mt-10 flex justify-center">
+                        <table className="table-auto border mb-10">
                           <tr>
-                            <th className="border p-4">Category</th>
-                            <th className="border p-4">Category Expense</th>
+                            <th className="border p-4 ">Category</th>
+                            <th className="border p-4 ">Category Expense</th>
                           </tr>
                           {data.map((entry, index) => (
                             <tr>
