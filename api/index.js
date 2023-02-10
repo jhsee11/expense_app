@@ -27,9 +27,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use(cors(corsOptions));
-
 app.use(express.json());
-
 app.use('/api/transaction', transRoute);
 
 app.get('/', (req, res) => {

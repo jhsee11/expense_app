@@ -26,7 +26,7 @@ const Tabs = ({ color, refresh, monthYear }) => {
     axios
       .get('http://localhost:5001/api/transaction/group/month/' + monthYear)
       .then((response) => {
-        console.log(`response is haha ${JSON.stringify(response.data)}`);
+        console.log(`response is ${JSON.stringify(response.data)}`);
         setData(response.data);
 
         setTargetData({
@@ -56,22 +56,13 @@ const Tabs = ({ color, refresh, monthYear }) => {
       });
   };
 
+  // trigger to get the latest transaction if new transaciton is added
   useEffect(() => {
     getTransaction();
   }, [monthYear, transactions]);
 
-  const COLORS = [
-    '#0088FE',
-    '#00C49F',
-    '#FFBB28',
-    '#FF8042',
-    'ffe699',
-    '#e6ff99',
-    '#99ffff',
-    '#cc99ff',
-  ];
-  const RADIAN = Math.PI / 180;
-
+  {
+    /*
   const renderCustomizedLabel = ({
     cx,
     cy,
@@ -97,6 +88,8 @@ const Tabs = ({ color, refresh, monthYear }) => {
       </text>
     );
   };
+*/
+  }
 
   return (
     <>
@@ -125,6 +118,7 @@ const Tabs = ({ color, refresh, monthYear }) => {
                 Expense Details
               </a>
             </li>
+
             <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
               <a
                 className={
@@ -145,6 +139,7 @@ const Tabs = ({ color, refresh, monthYear }) => {
               </a>
             </li>
           </ul>
+
           <div className="border-solid border-2 border-pink-600 relative flex flex-col min-w-0 break-words bg-blue w-full mb-6 shadow-lg px-10 rounded">
             <div className="px-4 py-5 flex-auto">
               <div className="tab-content tab-space">
@@ -155,32 +150,6 @@ const Tabs = ({ color, refresh, monthYear }) => {
                   {data.length > 0 && (
                     <div className="mt-6 w-[50%] mx-auto">
                       <PieChart chartData={targetData} />
-                      {/*
-                      <PieChart className="m-auto" width={600} height={600}>
-                        <Legend
-                          layout="vertical"
-                          verticalAlign="top"
-                          align="top"
-                        />
-                        <Pie
-                          data={data}
-                          cx="45%"
-                          cy="50%"
-                          labelLine={false}
-                          label={renderCustomizedLabel}
-                          nameKey="category"
-                          dataKey="total"
-                          outerRadius={210}
-                          fill="#8884d8"
-                        >
-                          {data.map((entry, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={COLORS[index % COLORS.length]}
-                            />
-                          ))}
-                        </Pie>
-                      </PieChart> */}
                       <div className="overflow-auto mt-10 flex justify-center">
                         <table className="table-auto border mb-10">
                           <tr>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { useCallback, useState, useContext } from 'react';
-import DailyExpense from './DailyExpense';
 import NewTransaction from '../NewTransaction/NewTransaction';
 import MonthPicker from '../MonthPicker/MonthPicker';
 import Tabs from '../Tabs/Tabs';
@@ -28,15 +27,15 @@ const Main = () => {
   const [update, setUpdate] = useState();
 
   const forceUpdate = useCallback(() => {
-    console.log('LAI LIAO LAI LIAO');
-    console.log('LAI LIAO monthYear is ' + monthYear);
+    console.log('monthYear is ' + monthYear);
     getTransactions(monthYear, dispatch);
 
     console.log(`transContext transactions is ${JSON.stringify(transactions)}`);
   });
 
+  //only runs when one of its dependencies update
   const callback = useCallback((date) => {
-    console.log(`z date is ${date}`);
+    console.log(`date is ${date}`);
     setMonthYear(date);
   }, []);
 
@@ -46,7 +45,6 @@ const Main = () => {
         Expense Tracker
       </h1>
       <MonthPicker parentCallback={callback} range={range} />
-      {/*<div>date is {monthYear}</div>*/}
       <Tabs refresh={update} monthYear={monthYear} />
       <NewTransaction parentCallback={forceUpdate} />
     </div>

@@ -3,7 +3,6 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const MonthPicker = ({ range, parentCallback }) => {
-  const [isVisible, setVisibility] = useState(true);
   const [monthYear, setMonthYear] = useState({ month: '', year: 0 });
   const [startDate, setStartDate] = useState(new Date());
 

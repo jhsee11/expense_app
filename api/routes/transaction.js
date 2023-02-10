@@ -2,11 +2,11 @@ const router = require('express').Router();
 const Transaction = require('../models/Transaction');
 
 //DELETE main id
-router.delete('/:id', async (req, res) => {
-  console.log('delete main entry ah');
+router.delete('/:trans_id', async (req, res) => {
+  console.log('delete main entry');
   try {
     const deletedTrans = await Transaction.findOneAndDelete({
-      _id: req.params.id,
+      _id: req.params.trans_id,
     });
     res.status(200).json(deletedTrans);
   } catch (err) {
@@ -26,7 +26,8 @@ router.delete('/:trans_id/:id', async (req, res) => {
     console.log(`Exist length is ${exists[0].items.length}`);
     console.log(`Exist object is ${JSON.stringify(exists)}`);
 
-    if (exists.length > 0 && exists[0].items.length != 1) {
+    // have more than 1 transaction tie to the same date, just delete the targeted transaction
+    if (exists.length > 0 && exists[0].items.length >= 1) {
       console.log(`Going to delete the transaction with id : ${req.params.id}`);
       const updatedTrans = await Transaction.findOneAndUpdate(
         { _id: req.params.trans_id },
@@ -39,8 +40,9 @@ router.delete('/:trans_id/:id', async (req, res) => {
       );
       console.log(`${JSON.stringify(updatedTrans)}`);
       res.status(200).json('Transaction has been deleted ...');
-    } else if (exists[0].items.length == 1) {
-      console.log('In this route');
+    }
+    // only have 1 transaction in the same date, can just delete the main entry
+    else if (exists[0].items.length == 1) {
       const updatedTrans = await Transaction.findOneAndDelete({
         _id: req.params.trans_id,
       });
@@ -62,6 +64,8 @@ router.post('/', async (req, res) => {
     let savedTransaction = null;
     console.log(`date is ${req.body.date}`);
     const transExists = await Transaction.exists({ date: req.body.date });
+
+    //if main entry exist, can just push into the array list
     if (transExists) {
       savedTransaction = await Transaction.findOneAndUpdate(
         { date: req.body.date },
@@ -94,7 +98,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-//GET by date/trans_id
+//GET by transaction id
 router.get('/find/:trans_id', async (req, res) => {
   try {
     console.log(
@@ -151,21 +155,6 @@ router.get('/find/month/:monthYear', async (req, res) => {
       date: 1,
     });
 
-    {
-      /*}
-    const transactions = await Transaction.find({
-      $expr: {
-        $and: [
-          { $eq: [{ $month: '$date' }, month] },
-          { $eq: [{ $year: '$date' }, year] },
-        ],
-      },
-    }).sort({
-      date: 1,
-    });
-  */
-    }
-
     res.status(200).json(transactions);
   } catch (err) {
     res.status(500).json(err);
@@ -208,8 +197,6 @@ router.get('/group/date', async (req, res) => {
 // GROUP by date - api/transaction/group/date
 router.get('/group/date/:targetDate', async (req, res) => {
   try {
-    //const targetDate = new Date(req.params.date);
-
     console.log(
       `Going to get the targeted transaction date with date : ${req.params.targetDate}`
     );
@@ -222,7 +209,11 @@ router.get('/group/date/:targetDate', async (req, res) => {
           _id: {
             category: '$items.category',
             formattedDate: {
-              $dateToString: { format: '%Y-%m-%d', date: '$date' },
+              $dateToString: {
+                format: '%Y-%m-%d',
+                date: '$date',
+                timezone: 'Asia/Singapore',
+              },
             },
           },
           total: { $sum: '$items.amount' },
@@ -259,7 +250,11 @@ router.get('/group/month/:monthYear', async (req, res) => {
           _id: {
             category: '$items.category',
             formattedDate: {
-              $dateToString: { format: '%m-%Y', date: '$date' },
+              $dateToString: {
+                format: '%m-%Y',
+                date: '$date',
+                timezone: 'Asia/Singapore',
+              },
             },
           },
           total: { $sum: '$items.amount' },
@@ -277,13 +272,6 @@ router.get('/group/month/:monthYear', async (req, res) => {
         },
       },
     ]);
-
-    //({
-    //  $group: {
-    //    _id: { $dateToString: { date: '$date', format: '%Y-%m' } },
-    //    total: { $sum: '$items.amount' },
-    //  },
-    //});
 
     res.status(200).json(transactions);
   } catch (err) {

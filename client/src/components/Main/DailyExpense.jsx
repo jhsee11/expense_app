@@ -1,9 +1,7 @@
 import React from 'react';
 import Card from './Card';
-//import data from './TransactionApi';
 import axios from 'axios';
 import { useState, useEffect, useCallback, useContext } from 'react';
-import { format } from 'date-fns';
 import { TransContext } from '../../contexts/transContext';
 import { getTransactions } from '../../contexts/apiCalls';
 
@@ -39,17 +37,6 @@ const DailyExpense = ({ monthYear }) => {
 
   const callback = useCallback(() => {
     getTransactions(monthYear, dispatch);
-    {
-      /*}
-    axios
-      .get('http://localhost:5001/api/transaction/find/month/' + monthYear)
-      .then((response) => {
-        console.log(`response is ${JSON.stringify(response.data)}`);
-        console.log(`type is ${typeof data}`);
-        setData(response.data);
-        console.log(`data is ${JSON.stringify(data)}`);
-      }); */
-    }
   }, []);
 
   return (

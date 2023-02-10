@@ -32,7 +32,6 @@ const Modal = ({ parentCallback }) => {
   const [startDate, setStartDate] = useState(new Date());
   const [val, setVal] = useState(0);
   const [openTab, setOpenTab] = React.useState(1);
-
   const [selected, setSelected] = useState({ name: 'Select A Category' });
   const [account, setAccount] = useState(accounts[0]);
 
@@ -49,7 +48,6 @@ const Modal = ({ parentCallback }) => {
     event.preventDefault();
 
     setShowModal(false);
-    //alert(`The name you entered was: `);
     console.log(`Transaction is ${JSON.stringify(transaction)}`);
 
     // submit the POST request to create a new transaction
@@ -67,7 +65,6 @@ const Modal = ({ parentCallback }) => {
   const handleChange = (e) => {
     // destructure the object
     let newObj = { ...transaction };
-    console.log('sini sini');
     console.log(`printing ${e.target.value}`);
 
     newObj.items[e.target.name] = e.target.value;
@@ -125,26 +122,6 @@ const Modal = ({ parentCallback }) => {
                         Expense
                       </a>
                     </li>
-                    {/*}
-                    <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
-                      <a
-                        className={
-                          'text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal ' +
-                          (openTab === 2
-                            ? 'text-white bg-blue-600'
-                            : 'text-pink-600 bg-white')
-                        }
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setOpenTab(2);
-                        }}
-                        data-toggle="tab"
-                        href="#link2"
-                        role="tablist"
-                      >
-                        Income
-                      </a>
-                    </li>*/}
                   </ul>
 
                   <button
@@ -208,9 +185,9 @@ const Modal = ({ parentCallback }) => {
                           leaveTo="opacity-0"
                         >
                           <Listbox.Options className="z-10 absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                            {categories.map((person, personIdx) => (
+                            {categories.map((item, itemIdx) => (
                               <Listbox.Option
-                                key={personIdx}
+                                key={itemIdx}
                                 className={({ active }) =>
                                   `relative cursor-default select-none py-2 pl-10 pr-4 ${
                                     active
@@ -218,7 +195,7 @@ const Modal = ({ parentCallback }) => {
                                       : 'text-gray-900'
                                   }`
                                 }
-                                value={person}
+                                value={item}
                               >
                                 {({ selected }) => (
                                   <>
@@ -227,7 +204,7 @@ const Modal = ({ parentCallback }) => {
                                         selected ? 'font-medium' : 'font-normal'
                                       }`}
                                     >
-                                      {person.name}
+                                      {item.name}
                                     </span>
                                     {selected ? (
                                       <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
@@ -317,19 +294,21 @@ const Modal = ({ parentCallback }) => {
                     <label className="block text-black text-sm font-bold mb-1">
                       Amount
                     </label>
+
                     <input
                       type="number"
                       pattern="[0-9]*"
-                      className="shadow number appearance-none border rounded w-full py-2 px-1 mb-2 text-black"
+                      className="text-center shadow number appearance-none border rounded w-full mb-2 text-black"
                       name="amount"
                       value={transaction.items.amount}
                       onChange={handleChange}
                     />
+
                     <label className="block text-black text-sm font-bold mb-1">
                       Note
                     </label>
                     <input
-                      className="shadow apperance-none border rounded w-full py-2 px-1 mb-2 text-black"
+                      className="text-center shadow apperance-none border rounded w-full py-2 px-1 mb-2 text-black"
                       name="note"
                       value={transaction.items.note}
                       onChange={handleChange}
